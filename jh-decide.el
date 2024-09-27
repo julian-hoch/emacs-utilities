@@ -4,7 +4,7 @@
 ;; Version: 1.0
 ;; Keywords: convenience, decision-making
 ;; Package-Requires: ((emacs "24.3"))
-;; URL: TODO
+;; URL: https://github.com/julian-hoch/emacs-utilities
 
 ;;; Commentary:
 
