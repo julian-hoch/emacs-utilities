@@ -31,7 +31,8 @@ Otherwise, prompt via the minibuffer.
 
 Input format:
   Option/Percentage, Option2/Percentage2, Option3
-Options without a specified Percentage will be assigned the remaining percentage."
+Options without a specified Percentage will be assigned the remaining
+percentage."
   (interactive)
   (let* ((input-str (jh--get-input-string input))
          (options (jh--parse-options input-str))
@@ -61,7 +62,8 @@ Options without a specified Percentage will be assigned the remaining percentage
   "Parse INPUT-STR into a list of options with their percentages.
 
 Returns a list of (OPTION PERCENTAGE) pairs.
-PERCENTAGE is either a number or the symbol 'Rest' for options without specified percentages."
+PERCENTAGE is either a number or the symbol 'Rest' for options without specified
+ percentages."
   (let ((items (split-string input-str ", *"))
         (options '())
         (rest-option nil))
@@ -111,7 +113,8 @@ Assigns the remaining percentage to the 'Rest' option, if any."
 (defun jh--build-cumulative-ranges (options)
   "Build cumulative percentage ranges for OPTIONS.
 
-Each option becomes a list: (OPTION START END), where START and END define the percentage range."
+Each option becomes a list: (OPTION START END), where START and END define the
+percentage range."
   (let ((cumulative-percentage 0)
         (cumulative-options '()))
     (dolist (opt options)
