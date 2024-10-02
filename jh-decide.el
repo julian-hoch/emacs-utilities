@@ -63,41 +63,59 @@ percentage."
 
 Returns a list of (OPTION PERCENTAGE) pairs.
 PERCENTAGE is either a number or the symbol 'Rest' for options without specified
- percentages."
+ percentages or 'Equal' for options without specified percentages."
   (let ((items (split-string input-str ", *"))
         (options '())
-        (rest-option nil))
+        (rest-option nil)
+        (all-no-percentage t))  ; Track if all options lack percentages
     (dolist (item items)
       (let* ((parts (split-string item "/"))
              (option (string-trim (nth 0 parts)))
              (percent-str (nth 1 parts))
              (percentage nil))
         (if percent-str
-            (if (string-match "\\`[0-9]+\\'" percent-str)
-                (setq percentage (string-to-number percent-str))
-              (error "Invalid percentage format in '%s'" item))
-          ;; No percentage specified, treat as 'Rest' option
+            (progn
+              (setq all-no-percentage nil)  ; Found a specified percentage
+              (if (string-match "\\`[0-9]+\\'" percent-str)
+                  (setq percentage (string-to-number percent-str))
+                (error "Invalid percentage format in '%s'" item)))
+          ;; No percentage specified, treat as 'Rest' or 'Equal' option
           (if rest-option
               (error "Multiple options without specified percentages: '%s' and '%s'"
                      rest-option option)
             (setq percentage 'Rest
                   rest-option option)))
         (push (list option percentage) options)))
+    ;; If all options lack percentages, mark them for equal distribution
+    (if all-no-percentage
+        (setq options (mapcar (lambda (opt) (setf (nth 1 opt) 'Equal) opt) options)))
     (reverse options)))  ; Return options in the original order
 
 (defun jh--validate-and-handle-rest (options)
   "Validate percentages in OPTIONS and handle the 'Rest' option.
 
 Ensures that the total percentages sum to 100%.
-Assigns the remaining percentage to the 'Rest' option, if any."
+Assigns the remaining percentage to the 'Rest' option, if any.
+Distributes percentages equally if all options are marked 'Equal'."
   (let ((total-percentage 0)
-        (rest-option nil))
-    ;; Calculate total percentage and identify the 'Rest' option
+        (rest-option nil)
+        (equal-options nil))
+    ;; Calculate total percentage and identify the 'Rest' and 'Equal' options
     (dolist (opt options)
       (let ((percentage (nth 1 opt)))
-        (if (eq percentage 'Rest)
-            (setq rest-option opt)
-          (setq total-percentage (+ total-percentage percentage)))))
+        (cond
+         ((eq percentage 'Rest)
+          (setq rest-option opt))
+         ((eq percentage 'Equal)
+          (push opt equal-options))
+         (t
+          (setq total-percentage (+ total-percentage percentage))))))
+    ;; Handle 'Equal' options
+    (when equal-options
+      (let ((equal-percentage (/ 100 (length equal-options))))
+        (dolist (opt equal-options)
+          (setf (nth 1 opt) equal-percentage))
+        (setq total-percentage 100)))  ; Equal distribution sums to 100%
     ;; Handle 'Rest' option
     (if rest-option
         (let ((rest-percentage (- 100 total-percentage)))
