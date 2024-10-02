@@ -62,8 +62,8 @@ percentage."
   "Parse INPUT-STR into a list of options with their percentages.
 
 Returns a list of (OPTION PERCENTAGE) pairs.
-PERCENTAGE is either a number or the symbol 'Rest' for options without specified
- percentages or 'Equal' for options without specified percentages."
+PERCENTAGE is either a number or the symbol 'Equal' for options without specified
+percentages."
   (let ((items (split-string input-str ", *"))
         (options '())
         (rest-option nil)
@@ -79,12 +79,8 @@ PERCENTAGE is either a number or the symbol 'Rest' for options without specified
               (if (string-match "\\`[0-9]+\\'" percent-str)
                   (setq percentage (string-to-number percent-str))
                 (error "Invalid percentage format in '%s'" item)))
-          ;; No percentage specified, treat as 'Rest' or 'Equal' option
-          (if rest-option
-              (error "Multiple options without specified percentages: '%s' and '%s'"
-                     rest-option option)
-            (setq percentage 'Rest
-                  rest-option option)))
+          ;; No percentage specified, mark for equal distribution
+          (setq percentage 'Equal))
         (push (list option percentage) options)))
     ;; If all options lack percentages, mark them for equal distribution
     (if all-no-percentage
