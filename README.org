@@ -1,1 +1,29 @@
-/home/j/denote/private/20241002T221730--emacs-utilities.org
+#+title:      Emacs Utilities
+#+date:       [2024-10-02 Wed 22:17]
+#+filetags:   
+#+identifier: 20241002T221730
+
+* Emacs Utilities
+Emacs Utilities are small utilities that I have written to make my life easier in Emacs, but which have not yet been turned into their own packages.
+
+** Mustache-CSV
+This package provides a function `jh/mustache-csv` that converts CSV data to text using Mustache templates.  The function reads a CSV file, parses it, and renders the data using a Mustache template . The result is inserted into the buffer.
+
+*** Usage:
+- Select the region containing the CSV data.
+- Call `jh/mustache-csv` interactively.
+- Provide a Mustache template when prompted.
+- The selected region is replaced with the rendered text.
+- The function can also be called programmatically.
+
+** Decide-With-Probabilities
+This package provides a function `jh/decide-with-probabilities` that allows you to
+input options with specified probabilities and randomly selects one based on those
+probabilities. It supports options with explicit percentages and a 'Rest' option
+that takes up the remaining percentage.
+
+*** Usage:
+- Call `jh/decide-with-probabilities` interactively.
+- Provide the options and percentages when prompted, e.g., "Option A/30, Option B/50, Option C".
+- Alternatively, select a region of text containing the options and percentages and call the function.
+- The function can also be called programmatically with an input string.
