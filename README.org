@@ -27,3 +27,24 @@ that takes up the remaining percentage.
 - Provide the options and percentages when prompted, e.g., "Option A/30, Option B/50, Option C".
 - Alternatively, select a region of text containing the options and percentages and call the function.
 - The function can also be called programmatically with an input string.
+
+  
+** Move to other window
+This function allows me to move the current buffer to the next window.
+
+#+begin_src emacs-lisp
+(defun jh/move-buffer-to-other-window ()
+  "Move the current buffer to the other window."
+  (interactive)
+  (let ((current-buffer (current-buffer))
+        (original-window (selected-window))
+        (next-window (next-window)))
+    (if (eq original-window next-window)
+        (message "No other window.")
+      (switch-to-buffer-other-window current-buffer)
+      (set-window-buffer original-window (other-buffer current-buffer))
+      (select-window original-window))))
+#+end_src
+
+#+RESULTS:
+: jh/move-buffer-to-other-window
